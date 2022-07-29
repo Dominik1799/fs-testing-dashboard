@@ -1,10 +1,11 @@
+from email.policy import default
 from dotenv import load_dotenv
 import os
 if os.path.exists(".env"):
     load_dotenv()
-from flask import Flask
+from flask import Flask, jsonify, send_file
 from utilities.parser import update_db
-from utilities.reader import get_reports
+from utilities.reader import get_reports, get_logs
 from dotenv import load_dotenv
 
 
@@ -32,5 +33,13 @@ def reports(day):
         return "This day did not contain any testing records", 404
     document.pop("_id")
     return document, 200
+
+@app.route("/logs/", defaults={"log": ""})
+@app.route("/logs/<path:log>")
+def logs(log):
+    if log == "":
+        return jsonify(get_logs()), 200
+    else:
+        return send_file(get_logs(log))
 
 app.run(host="0.0.0.0")

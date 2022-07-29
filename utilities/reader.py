@@ -1,3 +1,4 @@
+from cmath import log
 from pymongo import MongoClient
 from pymongo import DESCENDING, ASCENDING
 from datetime import datetime
@@ -31,3 +32,12 @@ def get_reports(day):
         report = collection.find_one({"test_day": day})
         return report
     
+
+def get_logs(log=None):
+    logs = []
+    if log is not None:
+        return os.environ["CLIENT_DOWNLOADER_LOGS_DIRECTORY"].rstrip("/") + "/" + log
+    with os.scandir(os.environ["CLIENT_DOWNLOADER_LOGS_DIRECTORY"]) as it:
+        for entry in it:
+            logs.append(entry.name)
+    return logs
