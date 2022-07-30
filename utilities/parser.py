@@ -43,7 +43,7 @@ def parse_directory_contents(directory_path, only_today=True):
             test_data = {
                 "test_timestamp": int(entry.name.split("_")[-1]),
                 "test_day": int(test_day),
-                "test_name": entry.name[:-9],
+                "test_name": entry.name[:-11],
                 "full_test_name": entry.name,
                 "full_path": os.path.abspath(entry.path),
                 "full_path_html": os.path.abspath(os.path.join(entry.path, "report.html")),
