@@ -24,6 +24,9 @@ def get_reports(day):
         today = int(datetime.now(tz).strftime('%Y%m%d')[2:])
         report = collection.find_one({"test_day": today})
         return report
+    elif day == "":
+        reports = collection.find({}, {"_id": 0, "test_day": 1, "summary": 1}).sort("test_day", DESCENDING).limit(10)
+        return list(reports)
     else:
         day = day.replace("-", "")[2:] if "-" in day else day
         if not day.isdigit():
@@ -40,4 +43,5 @@ def get_logs(log=None):
     with os.scandir(os.environ["CLIENT_DOWNLOADER_LOGS_DIRECTORY"]) as it:
         for entry in it:
             logs.append(entry.name)
-    return logs
+    logs.sort(reverse=True)
+    return logs[:10]

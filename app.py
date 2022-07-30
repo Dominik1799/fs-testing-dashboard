@@ -26,8 +26,11 @@ def parse(version ,data):
     return "success", 200
 
 # day should be one of these values: latest | today | YYYY-MM-DD
-@app.route("/reports/<day>")
+@app.route("/reports/", defaults={"day": ""})
+@app.route("/reports/<path:day>")
 def reports(day):
+    if day == "":
+        return jsonify(get_reports(""))
     document = get_reports(day)
     if document is None:
         return "This day did not contain any testing records", 404
