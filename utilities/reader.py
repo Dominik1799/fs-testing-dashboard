@@ -12,10 +12,10 @@ CONNECTION_STRING = "mongodb://{user}:{pasw}@{host}:27017/".format(user=os.envir
                                                                    host=os.environ["MONGO_HOST"])
 
 
-def get_reports(day):
+def get_reports(version, day):
     client = MongoClient(CONNECTION_STRING)
     db = client["forumstar"]
-    collection = db["testing_results"]
+    collection = db["testing_results_" + version]
     if day == "latest":
         report = collection.find().sort("test_day", DESCENDING).limit(1)
         return report[0]

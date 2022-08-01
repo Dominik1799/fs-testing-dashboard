@@ -20,18 +20,18 @@ def parse(version ,data):
     if not os.path.exists(directory):
         return "Not fount", 404
     if data == "latest":
-        update_db(directory, only_today=True)
+        update_db(directory, version ,only_today=True)
     else:
-        update_db(directory, only_today=False)
+        update_db(directory, version, only_today=False)
     return "success", 200
 
 # day should be one of these values: latest | today | YYYY-MM-DD
-@app.route("/reports/", defaults={"day": ""})
-@app.route("/reports/<path:day>")
-def reports(day):
+@app.route("/reports/<version>/", defaults={"day": ""})
+@app.route("/reports/<version>/<path:day>")
+def reports(version ,day):
     if day == "":
-        return jsonify(get_reports(""))
-    document = get_reports(day)
+        return jsonify(get_reports(version, ""))
+    document = get_reports(version, day)
     if document is None:
         return "This day did not contain any testing records", 404
     document.pop("_id")

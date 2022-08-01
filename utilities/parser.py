@@ -93,17 +93,17 @@ def parse_time(duration):
     else:
         return 0
     
-def update_db(directory_path, only_today=True):
+def update_db(directory_path, version ,only_today=True):
     client = MongoClient(CONNECTION_STRING)
     db = client["forumstar"]
-    collection = db["testing_results"]
+    collection = db["testing_results_" + version]
     documents = parse_directory_contents(directory_path, only_today)
     
     for key in documents:
         mongo_doc = collection.find_one({"test_day": int(key)})
         # new day, no tests for this day
         if mongo_doc is None:
-            collection.insert_one({"test_day": int(key), "reports": documents[key]["reports"], "summary": get_day_summary(documents[key]["reports"])})
+            collection.insert_one({"test_day": int(key), "version": version ,"reports": documents[key]["reports"], "summary": get_day_summary(documents[key]["reports"])})
         else:
             result = []
             mongo_reports = mongo_doc["reports"]
@@ -115,9 +115,3 @@ def update_db(directory_path, only_today=True):
             collection.update_one({"test_day": key}, { "$set": {"reports": result, "summary": get_day_summary(result)} })
             
             
-
-
-
-
-# parse_report_html("../data/reports/daily_BY/new reports/Report_Bet_03_Beteiligte_kopieren_einfuegen_Favoriten_2108231550/report.html")
-# update_db("../data/reports/daily_BY/new reports/", only_today=False)
