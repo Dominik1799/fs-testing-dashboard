@@ -109,9 +109,10 @@ def update_db(directory_path, version ,only_today=True):
             mongo_reports = mongo_doc["reports"]
             new_reports = documents[key]["reports"]
             new_reports.extend(mongo_reports)
+            i = 1
             for report in new_reports:
                 if report not in result:
                     result.append(report)
-            collection.update_one({"test_day": key}, { "$set": {"reports": result, "summary": get_day_summary(result)} })
+            tem = collection.update_one({"test_day": int(key)}, { "$set": {"reports": result, "summary": get_day_summary(result)} })
             
             
